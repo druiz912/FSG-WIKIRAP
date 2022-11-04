@@ -3,10 +3,7 @@ package com.druiz.fullstack.wikirap.artist.infrastructure.controller.rest;
 import com.druiz.fullstack.wikirap.artist.application.port.ArtistService;
 import com.druiz.fullstack.wikirap.artist.infrastructure.controller.dto.ArtistInputDto;
 import com.druiz.fullstack.wikirap.artist.infrastructure.controller.dto.ArtistOutputDto;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,13 +26,13 @@ public class ArtistController {
 
     // ** 1 **
     @PostMapping
-    public ArtistOutputDto addArtist(ArtistInputDto artistInputDto){
+    public ArtistOutputDto addArtist(@RequestBody ArtistInputDto artistInputDto){
         return artistService.addArtist(artistInputDto);
     }
 
     // ** 2 **
-    @PostMapping
-    public List<ArtistOutputDto> addListArtists(List<ArtistInputDto> artistInputDtoList){
+    @PostMapping("/list")
+    public List<ArtistOutputDto> addListArtists(@RequestBody List<ArtistInputDto> artistInputDtoList){
         return artistService.addListArtists(artistInputDtoList);
     }
 
@@ -46,29 +43,34 @@ public class ArtistController {
      * **/
 
     // ** 1 **
+    @GetMapping
     public List<ArtistOutputDto> getAllArtists(){
         return artistService.findAllArtists();
     }
 
     // ** 2 **
-    public List<ArtistOutputDto> getArtistByApodo(String apodo){
+    @GetMapping("aka/{apodo}")
+    public List<ArtistOutputDto> getArtistByApodo(@PathVariable String apodo){
         return artistService.findArtistByApodo(apodo);
     }
 
     // ** 3 **
-    public ArtistOutputDto getArtistById(int id){
+    @GetMapping("id/{id}")
+    public ArtistOutputDto getArtistById(@PathVariable int id){
         return artistService.findArtistById(id);
     }
 
     /* ****** */
 
     /** MÉTODO PUT **/
-    public ArtistOutputDto updateArtist(int id, ArtistInputDto artistInputDto){
+    @PutMapping("id/{id}")
+    public ArtistOutputDto updateArtist(@PathVariable int id,@RequestBody ArtistInputDto artistInputDto){
         return artistService.updateArtist(id, artistInputDto);
     }
 
     /** MÉTODO DELETE **/
-    public String deletePerson(int id){
+    @DeleteMapping("id/{id}")
+    public String deletePerson(@PathVariable int id){
         return artistService.deleteArtist(id);
     }
 

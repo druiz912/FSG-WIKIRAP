@@ -8,20 +8,19 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Artist")
+@Entity(name = "Artist")
+@Table(name="Artist")
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "identificador")
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "id_person")
     private Person person;
 
     @Column(name = "apodo", length = 100)
@@ -33,9 +32,7 @@ public class Artist {
     @Column(name = "detalles")
     private String details;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "artist",
-            cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Album.class, cascade = CascadeType.ALL)
     List<Album> albums;
 
     public Artist(String apodo, String imageUrl, String periodoActivo, String details) {
