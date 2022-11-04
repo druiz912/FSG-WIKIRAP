@@ -6,12 +6,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Persons")
+@Entity
+@Table(name = "Person")
 public class Person {
 
     @Id
@@ -27,7 +28,6 @@ public class Person {
     @Column(name = "edad",length = 3, nullable = false)
     private int age;
     @Column(name = "fecha_nacimiento")
-    @Temporal(TemporalType.DATE)
     private LocalDate dateOfBirth;
     @Column(name = "origen", length = 120)
     private String origen;
