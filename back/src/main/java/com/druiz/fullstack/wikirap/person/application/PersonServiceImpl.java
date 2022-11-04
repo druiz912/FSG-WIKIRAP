@@ -60,9 +60,10 @@ public class PersonServiceImpl implements PersonService {
     /** MÉTODO PARA AÑADIR UNA LISTA DE PERSONAS **/
     @Override
     public List<PersonOutputDto> addListPersons(List<PersonInputDto> personInputDtoList) {
-        List<Person> personList = new ArrayList<Person>();
-        personInputDtoList.stream().forEach((p)-> {
-           var person = mapper.mapInputToEntity(p);
+        List<Person> personList = new ArrayList<>();
+        /* PIPELINE */
+        personInputDtoList.forEach( p -> {
+           Person person = mapper.mapInputToEntity(p);
            personList.add(person);
         });
         // Save

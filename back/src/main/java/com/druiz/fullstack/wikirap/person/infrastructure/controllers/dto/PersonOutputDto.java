@@ -1,11 +1,13 @@
 package com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +22,4 @@ public class PersonOutputDto {
     private Float altura;
     private String occupation;
 
-    public PersonOutputDto(PersonInputDto personInputDto) {
-
-    }
 }

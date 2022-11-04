@@ -3,10 +3,7 @@ package com.druiz.fullstack.wikirap.person.infrastructure.controllers.rest;
 import com.druiz.fullstack.wikirap.person.application.port.PersonService;
 import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonInputDto;
 import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonOutputDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class PersonController {
         return personService.addPerson(personInputDto);
     }
     // ** 2 **
-    @PostMapping
+    @PostMapping("list")
     public List<PersonOutputDto> addListPerson(List<PersonInputDto> personInputDtoList){
         return personService.addListPersons(personInputDtoList);
     }
@@ -49,24 +46,26 @@ public class PersonController {
     }
     // ** 2 **
     @GetMapping("/name/{name}")
-    public List<PersonOutputDto> getAllPersonByName(String name) {
+    public List<PersonOutputDto> getAllPersonByName(@PathVariable String name) {
         return personService.findPersonByName(name);
     }
     // ** 3 **
     @GetMapping("id/{id}")
-    public PersonOutputDto getPersonById(int id){
+    public PersonOutputDto getPersonById(@PathVariable int id){
         return personService.findPersonById(id);
     }
 
     /* ****** */
 
     /** MÉTODO PUT **/
-    public PersonOutputDto updatePerson(int id, PersonInputDto personInputDto){
+    @PutMapping("id/{id}")
+    public PersonOutputDto updatePerson(@PathVariable int id, @RequestBody PersonInputDto personInputDto){
         return personService.updatePerson(id, personInputDto);
     }
 
     /** MÉTODO DELETE **/
-    public String deletePerson(int id){
+    @DeleteMapping("id/{id}")
+    public String deletePerson(@PathVariable int id){
         return personService.deletePerson(id);
     }
 }
