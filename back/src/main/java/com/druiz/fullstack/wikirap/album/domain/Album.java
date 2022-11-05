@@ -6,8 +6,6 @@ import com.druiz.fullstack.wikirap.artist.domain.Song;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -15,15 +13,14 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Album")
-@Table(name="Album")
+@Entity
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idAlbum;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_artist",referencedColumnName = "id")
+    @JoinColumn(name = "id_artist")
     private Artist artist;
 
     @OneToMany(targetEntity = Song.class, cascade = CascadeType.ALL)

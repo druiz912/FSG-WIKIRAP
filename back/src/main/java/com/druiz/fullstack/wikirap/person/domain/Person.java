@@ -12,12 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Person")
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "identificador")
     private int idPerson;
     @Column(name = "nombre", length = 80, nullable = false)
     private String name;

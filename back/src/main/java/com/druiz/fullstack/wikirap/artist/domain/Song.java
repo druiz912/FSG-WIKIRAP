@@ -14,13 +14,12 @@ import java.time.LocalTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Song")
-@Table(name="Song")
+@Entity
 public class Song {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idSong;
 
     @Column(name = "title")
     private String title;
@@ -35,6 +34,6 @@ public class Song {
     private LocalDate departureDate;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_album",referencedColumnName  = "id")
+    @JoinColumn(name = "fk_id_album")
     private Album album;
 }

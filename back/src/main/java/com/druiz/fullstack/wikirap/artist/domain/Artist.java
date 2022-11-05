@@ -13,14 +13,13 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Artist")
-@Table(name="Artist")
+@Entity
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idArtist;
 
-    @OneToOne
+    @OneToOne(targetEntity = Person.class)
     private Person person;
 
     @Column(name = "apodo", length = 100)
