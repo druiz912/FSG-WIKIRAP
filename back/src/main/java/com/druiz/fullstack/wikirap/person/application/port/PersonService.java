@@ -1,7 +1,7 @@
 package com.druiz.fullstack.wikirap.person.application.port;
 
-import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonInputDto;
-import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonOutputDto;
+import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonInputDto;
+import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonOutputDto;
 
 import java.util.List;
 

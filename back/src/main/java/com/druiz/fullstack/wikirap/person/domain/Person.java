@@ -1,10 +1,9 @@
 package com.druiz.fullstack.wikirap.person.domain;
 
-import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonInputDto;
+import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonInputDto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 
 @Getter
@@ -17,16 +16,16 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPerson;
-    @Column(name = "nombre", length = 80, nullable = false)
+    @Column(name = "nombre", length = 80)
     private String name;
-    @Column(name = "primer_apellido", length = 50, nullable = false)
+    @Column(name = "primer_apellido", length = 50)
     private String surname;
-    @Column(name = "segundo_apellido",length = 50, nullable = false)
+    @Column(name = "segundo_apellido",length = 50)
     private String surname1;
     @Column(name = "edad",length = 3, nullable = false)
     private int age;
     @Column(name = "fecha_nacimiento")
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     @Column(name = "origen", length = 120)
     private String origen;
     @Column(name = "altura")

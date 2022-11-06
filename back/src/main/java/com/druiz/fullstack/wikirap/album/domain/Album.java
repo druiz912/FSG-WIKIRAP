@@ -2,7 +2,7 @@ package com.druiz.fullstack.wikirap.album.domain;
 
 import com.druiz.fullstack.wikirap.album.infrastructure.dto.AlbumInputDto;
 import com.druiz.fullstack.wikirap.artist.domain.Artist;
-import com.druiz.fullstack.wikirap.artist.domain.Song;
+import com.druiz.fullstack.wikirap.song.domain.Song;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,15 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Album {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAlbum;
 
-    @ManyToOne
-    @JoinColumn(name = "id_artist")
+    /* Un álbum puede tener varios artistas relacionados */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_id_artist")
     private Artist artist;
 
-    @OneToMany(targetEntity = Song.class, cascade = CascadeType.ALL)
+    /* Un álbum tiene varias canciones */
+    @OneToMany(targetEntity = Song.class, cascade = CascadeType.REFRESH)
     private List<Song> songs;
 
     @Column(name = "portada_url")

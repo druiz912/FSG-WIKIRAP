@@ -2,8 +2,8 @@ package com.druiz.fullstack.wikirap.person.application;
 
 import com.druiz.fullstack.wikirap.person.application.port.PersonService;
 import com.druiz.fullstack.wikirap.person.domain.Person;
-import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonInputDto;
-import com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto.PersonOutputDto;
+import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonInputDto;
+import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonOutputDto;
 import com.druiz.fullstack.wikirap.person.infrastructure.repo.PersonRepo;
 import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
 import com.druiz.fullstack.wikirap.utils.mapper.PersonMapper;
@@ -16,8 +16,8 @@ import java.util.List;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private PersonRepo personRepo;
-    private PersonMapper mapper;
+    private final PersonRepo personRepo;
+    private final PersonMapper mapper;
 
     /** INYECCIÓN POR CONSTRUCTOR **/
     public PersonServiceImpl(PersonRepo personRepo, PersonMapper mapper) {

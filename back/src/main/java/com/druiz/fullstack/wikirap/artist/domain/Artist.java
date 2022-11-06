@@ -19,7 +19,7 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idArtist;
 
-    @OneToOne(targetEntity = Person.class)
+    @OneToOne(targetEntity = Person.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Person person;
 
     @Column(name = "apodo", length = 100)
@@ -31,7 +31,7 @@ public class Artist {
     @Column(name = "detalles")
     private String details;
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Album.class, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Album.class, cascade = CascadeType.REFRESH)
     List<Album> albums;
 
     public Artist(String apodo, String imageUrl, String periodoActivo, String details) {

@@ -1,4 +1,4 @@
-package com.druiz.fullstack.wikirap.album.infrastructure.rest;
+package com.druiz.fullstack.wikirap.album.infrastructure;
 
 import com.druiz.fullstack.wikirap.album.application.AlbumService;
 import com.druiz.fullstack.wikirap.album.infrastructure.dto.AlbumInputDto;
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/** CONTROLADOR **/
-
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("album")
@@ -17,10 +15,11 @@ public class AlbumController {
 
     private final AlbumService albumService;
 
-    /** INYECCIÓN POR CONSTRUCTOR **/
     public AlbumController(AlbumService albumService) {
         this.albumService = albumService;
     }
+
+    /** ------------ ** POST ** --------------- **/
 
     /* ENDPOINT PARA AÑADIR UN ÁLBUM  */
     @PostMapping
@@ -28,19 +27,13 @@ public class AlbumController {
         return albumService.addAlbum(albumInputDto);
     }
 
-    /* ENDPOINT PARA ACTUALIZAR UN ÁLBUM */
-    @PutMapping("id/{id}")
-    public AlbumOutputDto updateAlbum(@PathVariable int id, @RequestBody @Valid AlbumInputDto albumInputDto){
-        return albumService.updateAlbum(id, albumInputDto);
+    /* ENDPOINT PARA AÑADIR UNA LISTA DE ALBUMS */
+    @PostMapping("add/list")
+    public List<AlbumOutputDto> addListAlbums(@RequestBody @Valid List<AlbumInputDto> albumsInputDto){
+        return albumService.addListAlbums(albumsInputDto);
     }
 
-    /* ENDPOINT PARA ELIMINAR UN ÁLBUM */
-    @DeleteMapping("id/{id}")
-    public void deleteAlbum(@PathVariable int id) {
-        albumService.deleteAlbum(id);
-    }
-
-    /* --------------------------- */
+    /** ------------ ** GET ** --------------- **/
 
     /* ENDPOINT PARA OBTENER UNA LISTA DE TODOS LOS ÁLBUMES */
     @GetMapping
@@ -58,6 +51,20 @@ public class AlbumController {
     @GetMapping("id/{id}")
     public AlbumOutputDto getDiscosById(@PathVariable int id) {
         return albumService.findAlbumById(id);
+    }
+
+    /** ------------ * PUT & DELETE * --------------- **/
+
+    /* ENDPOINT PARA ACTUALIZAR UN ÁLBUM */
+    @PutMapping("id/{id}")
+    public AlbumOutputDto updateAlbum(@PathVariable int id, @RequestBody @Valid AlbumInputDto albumInputDto){
+        return albumService.updateAlbum(id, albumInputDto);
+    }
+
+    /* ENDPOINT PARA ELIMINAR UN ÁLBUM */
+    @DeleteMapping("id/{id}")
+    public void deleteAlbum(@PathVariable int id) {
+        albumService.deleteAlbum(id);
     }
 
 

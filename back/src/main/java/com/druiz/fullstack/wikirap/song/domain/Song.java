@@ -1,6 +1,7 @@
-package com.druiz.fullstack.wikirap.artist.domain;
+package com.druiz.fullstack.wikirap.song.domain;
 
 import com.druiz.fullstack.wikirap.album.domain.Album;
+import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongInputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,11 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idSong;
 
+    /* Un álbum tiene varias canciones */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_id_album")
+    private Album album;
+
     @Column(name = "title")
     private String title;
 
@@ -33,7 +39,10 @@ public class Song {
     @Column(name = "fecha_estreno")
     private LocalDate departureDate;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_id_album")
-    private Album album;
+    public void update(SongInputDto input) {
+        title = input.getTitle();
+        duration = LocalTime.parse(input.getDuration());
+        description = input.getDescription();
+        departureDate = LocalDate.parse(input.getDepartureDate());
+    }
 }

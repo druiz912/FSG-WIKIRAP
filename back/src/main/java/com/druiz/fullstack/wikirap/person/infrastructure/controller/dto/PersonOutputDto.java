@@ -1,29 +1,22 @@
-package com.druiz.fullstack.wikirap.person.infrastructure.controllers.dto;
+package com.druiz.fullstack.wikirap.person.infrastructure.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class PersonInputDto {
+@AllArgsConstructor
+public class PersonOutputDto {
 
-    @NotEmpty
+    private int idPerson;
     private String name;
-    @NotEmpty
     private String surname;
-    @NotEmpty
     private String surname1;
-    @NotNull
     private int age;
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
     private String origen;
     private Float altura;
     private String occupation;
