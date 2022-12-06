@@ -1,0 +1,130 @@
+[
+{
+    "name":"Jose",
+    "surnames":"Galinier Fenix",
+    "dateOfBirth": "1992-02-27",
+    "origen":"Cádiz",
+    "altura":1.71,
+    "occupation":"Rapero"
+},
+{
+    "name":"Ignacio",
+    "surnames":"Fornés Olmo",
+    "dateOfBirth": "1974-10-01",
+    "origen":"Albacete",
+    "altura":1.78,
+    "occupation":"Rapero"
+},
+{
+    "name":"Manuel",
+    "surnames":"González Rodríguez",
+    "dateOfBirth": "1978-12-13",
+    "origen":"Sevilla",
+    "altura":1.78,
+    "occupation":"Rapero"
+},
+{
+    "name":"Antón",
+    "surnames":"Álvarez Alfaro",
+    "dateOfBirth": "1990-07-16",
+    "origen":"Madrid",
+    "altura":1.71,
+    "occupation":"Rapero"
+},
+{
+    "name":"María",
+    "surnames":"Rodríguez Garrido",
+    "dateOfBirth": "1979-02-13",
+    "origen":"Jerez de la Frontera",
+    "altura":1.75,
+    "occupation":"Rapera"
+},
+{
+    "name":"Javier",
+    "surnames":"Ibarra Ramos",
+    "dateOfBirth": "1980-03-01",
+    "origen":"Zaragoza",
+    "altura":1.80,
+    "occupation":"Rapero"
+},
+{
+    "name":"Saturnino",
+    "surnames":"Rey García",
+    "dateOfBirth": "1977-05-16",
+    "origen":"Sevilla",
+    "altura":1.80,
+    "occupation":"Rapero"
+},
+{
+    "name":"Oliver",
+    "surnames":"Gallego Sarmiento",
+    "dateOfBirth": "1976-11-22",
+    "origen":"Barcelona",
+    "altura":1.80,
+    "occupation":"Rapero"
+},
+{
+    "name":"Daniel",
+    "surnames":"Gómez Carrero",
+    "dateOfBirth": "1990-02-12",
+    "origen":"Madrid",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"David",
+    "surnames":"Gilaberte Miguel",
+    "dateOfBirth": "1976-12-25",
+    "origen":"Zaragoza",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"Sergio",
+    "surnames":"Rodríguez Fernández",
+    "dateOfBirth": "1976-02-19",
+    "origen":"Zaragoza",
+    "altura":1.80,
+    "occupation":"Rapero"
+},
+{
+    "name":"Fernando",
+    "surnames":"Gálvez Gómez",
+    "dateOfBirth": "1990-05-12",
+    "origen":"Granada",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"Daniel",
+    "surnames":"Martínez de la Ossa Romero",
+    "dateOfBirth": "1993-06-01",
+    "origen":"Málaga",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"Isidro",
+    "surnames":"Ramos",
+    "dateOfBirth": "1993-06-02",
+    "origen":"Málaga",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"Alex",
+    "surnames":"Fajardo",
+    "dateOfBirth": "1996-06-01",
+    "origen":"Mallorca",
+    "altura":1.72,
+    "occupation":"Rapero"
+},
+{
+    "name":"Fernando",
+    "surnames":"Costa",
+    "dateOfBirth": "1995-06-01",
+    "origen":"Ibiza",
+    "altura":1.72,
+    "occupation":"Rapero"
+}
+]

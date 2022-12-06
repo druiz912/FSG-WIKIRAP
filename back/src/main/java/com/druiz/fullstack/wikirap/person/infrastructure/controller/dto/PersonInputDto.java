@@ -1,24 +1,20 @@
 package com.druiz.fullstack.wikirap.person.infrastructure.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonInputDto {
 
+    @NotEmpty(message = "The name of the person is required")
     private String name;
-    private String surname;
-    private String surname1;
-    @NotNull
-    private int age;
-    private String dateOfBirth;
+    private String surnames;
+    @NotEmpty(message = "The date of birth is required")
+    private LocalDate dateOfBirth;
     private String origen;
     private Float altura;
     private String occupation;

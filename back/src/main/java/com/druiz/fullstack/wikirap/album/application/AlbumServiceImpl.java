@@ -4,44 +4,53 @@ import com.druiz.fullstack.wikirap.album.domain.Album;
 import com.druiz.fullstack.wikirap.album.infrastructure.dto.AlbumInputDto;
 import com.druiz.fullstack.wikirap.album.infrastructure.dto.AlbumOutputDto;
 import com.druiz.fullstack.wikirap.album.infrastructure.repo.AlbumRepo;
+import com.druiz.fullstack.wikirap.artist.domain.Artist;
+import com.druiz.fullstack.wikirap.artist.infrastructure.controller.dto.ArtistOutputDto;
+import com.druiz.fullstack.wikirap.artist.infrastructure.repo.ArtistRepo;
 import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
-import com.druiz.fullstack.wikirap.utils.mapper.AlbumMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class AlbumServiceImpl implements AlbumService {
     private final AlbumRepo albumRepo;
-    private final AlbumMapper mapper;
-    public AlbumServiceImpl(AlbumRepo albumRepo, AlbumMapper mapper) {
-        this.albumRepo = albumRepo;
-        this.mapper = mapper;
-    }
 
-    /** MÉTODO PARA AÑADIR UN ÁLBUM RECIBIENDO POR PARÁMETROS UN DTO **/
+    private final ArtistRepo artistRepo;
+
+
+    /**
+     * MÉTODO PARA AÑADIR UN ÁLBUM RECIBIENDO POR PARÁMETROS UN DTO
+     **/
     @Override
     public AlbumOutputDto addAlbum(AlbumInputDto albumInputDto) {
-        Album albumMap = mapper.mapInputToEntity(albumInputDto);
-        Album album = albumRepo.save(albumMap);
-        return mapper.mapEntityToOutput(album);
+        Album album = albumRepo.getArtistQuery(albumInputDto.getIdArtist());
+        albumRepo.save(album);
+        return new AlbumOutputDto(album);
     }
 
-    /** MÉTODO PARA ACTUALIZAR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO & UN ID **/
+    /**
+     * MÉTODO PARA ACTUALIZAR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO & UN ID
+     **/
     @Override
     public AlbumOutputDto updateAlbum(int id, AlbumInputDto albumInputDto) {
-        // 1. Comprobar si existe tal id
-        Album albumInDB = albumRepo.findById(id).orElseThrow(
-                () -> new NotFoundException("Album with id " + id + " not found"));
-        // 2. Usamos método update para actualizar entidad
-        albumInDB.update(albumInputDto);
-        albumRepo.save(albumInDB);
-        // 3. Return usando el mapper
-        return mapper.mapEntityToOutput(albumInDB);
+        if(albumRepo.findById(id).isPresent()){
+            var mapeo = mapToEntity(albumInputDto);
+            Album album0 = new Album();
+            album0.update(mapeo);
+            albumRepo.save(mapeo);
+            return new AlbumOutputDto(album0);
+        } else {
+            throw new NotFoundException("Not found album with id: " + id );
+        }
     }
 
-    /** MÉTODO PARA ELIMINAR UN ALBUM **/
+    /**
+     * MÉTODO PARA ELIMINAR UN ALBUM
+     **/
     @Override
     public void deleteAlbum(int id) {
         if (albumRepo.findById(id).isPresent()) {
@@ -52,45 +61,93 @@ public class AlbumServiceImpl implements AlbumService {
 
     }
 
-    /** MÉTODO PARA AÑADIR UNA LISTA DE ÁLBUMES **/
+    /**
+     * MÉTODO PARA AÑADIR UNA LISTA DE ÁLBUMES
+     **/
     @Override
     public List<AlbumOutputDto> addListAlbums(List<AlbumInputDto> albumInputDtoList) {
         List<Album> albumList = new ArrayList<>();
-        albumInputDtoList.forEach( p-> {
-            var album = mapper.mapInputToEntity(p);
+        albumInputDtoList.forEach(albumDto -> {
+            Album album = mapToEntity(albumDto);
             albumList.add(album);
         });
         // Save
         albumRepo.saveAll(albumList);
-        // Convertir a OutputDto
-        return mapper.mapListEntityToOutput(albumList);
+        //
+        List<AlbumOutputDto> listOutput = new ArrayList<>();
+        // Iteramos la lista de Albums para mapear cada elemento de la lista a Output
+        albumList.forEach(entity -> {
+            /* Le pasamos cada elemento ≥ entity */
+            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
+            /* Añadimos a la lista de AlbumOutputDto */
+            listOutput.add(outputDto);
+        });
+
+        return listOutput;
     }
 
-    /** MÉTODOS DE BÚSQUEDA:
-     *  1. Buscar álbum por ID
-     *  2. Buscar álbum por Title
-     *  3. Buscar todos los álbumes
-     * **/
+    /**
+     * MÉTODOS DE BÚSQUEDA:
+     * 1. Buscar álbum por ID
+     * 2. Buscar álbum por Title
+     * 3. Buscar todos los álbumes
+     **/
 
     // *-* 1 *-* //
     @Override
     public AlbumOutputDto findAlbumById(int id) {
         // 1. Buscamos tal id
         Album album = albumRepo.findById(id).orElseThrow(
-                ()-> new NotFoundException("Album with id " + id + " not found"));
+                () -> new NotFoundException("Album with id " + id + " not found"));
         // 2. Mapeamos la entidad a Output
-        return mapper.mapEntityToOutput(album);
+        return new AlbumOutputDto(album);
     }
+
     // *-* 2 *-* //
     @Override
     public List<AlbumOutputDto> findAlbumByTitle(String title) {
-        List<Album> albums = albumRepo.findByTitle(title);
-        return mapper.mapListEntityToOutput(albums);
+        List<Album> listAlbums = albumRepo.findByTitle(title);
+        List<AlbumOutputDto> listOutputDto = new ArrayList<>();
+        listAlbums.forEach( entity -> {
+            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
+            listOutputDto.add(outputDto);
+        });
+        return listOutputDto;
     }
+
     // *-* 3 *-* //
     @Override
     public List<AlbumOutputDto> findAllAlbum() {
-        List<Album> albums = albumRepo.findAll();
-        return mapper.mapListEntityToOutput(albums);
+        List<Album> albumList = albumRepo.findAll();
+        List<AlbumOutputDto> albumOutputDtoList = new ArrayList<>();
+        albumList.forEach(entity -> {
+            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
+            albumOutputDtoList.add(outputDto);
+        });
+        return albumOutputDtoList;
     }
+
+
+    public Album mapToEntity (AlbumInputDto dto){
+        Album album1 = new Album();
+        album1.setArtists(obtenerArtistById(dto));
+        album1.setTitle(dto.getTitle());
+        album1.setTitlePage(dto.getUrlPortada());
+        album1.setDuration(dto.getDuration());
+        album1.setDepartureDate(dto.getFechaSalida());
+        return album1;
+    }
+
+    private Artist obtenerArtistById(AlbumInputDto dto) {
+        /* var x = artistRepo.findById(dto.getIdArtist()).orElseThrow(
+                () -> new NotFoundException("Artist not found"));
+        List<Artist> artistList = new ArrayList<>();
+        artistList.add(x);
+        */
+
+        return artistRepo.findById(dto.getIdArtist()).orElseThrow(
+                () -> new NotFoundException("Artist not found"));
+    }
+
+
 }

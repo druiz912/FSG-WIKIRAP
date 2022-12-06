@@ -1,24 +1,32 @@
 package com.druiz.fullstack.wikirap.person.infrastructure.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.druiz.fullstack.wikirap.person.domain.Person;
+import lombok.*;
 
-@Getter
-@Setter
+import java.time.LocalDate;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonOutputDto {
 
     private int idPerson;
     private String name;
-    private String surname;
-    private String surname1;
+    private String surnames;
     private int age;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String origen;
     private Float altura;
     private String occupation;
 
+    public PersonOutputDto(Person person) {
+        idPerson = person.getIdPerson();
+        name = person.getName();
+        surnames = person.getSurnames();
+        age = person.getAge();
+        dateOfBirth = person.getDateOfBirth();
+        origen = person.getOrigen();
+        altura = person.getAltura();
+        occupation = person.getOccupation();
+    }
 }

@@ -56,7 +56,7 @@ export class PersonFormComponent implements OnInit
     console.log('Se ha enviado: ' + this.person);
     this.service.create(this.person).subscribe(
       // Nos suscribimos para recibir de vuelta lo creado
-      res => this.router.navigate(['/person'])
+      res => this.router.navigate(['/person/list'])
     )
   }
 
@@ -65,7 +65,7 @@ export class PersonFormComponent implements OnInit
   {
     this.service.update(this.person).subscribe(
       // Una vez que lo actualice nos redirija
-      x => this.router.navigate(['/person'])
+      x => this.router.navigate(['/person/list'])
     )
   }
 

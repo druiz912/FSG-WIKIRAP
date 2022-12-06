@@ -1,13 +1,15 @@
 package com.druiz.fullstack.wikirap.song.infrastructure.controller.dto;
 
+import com.druiz.fullstack.wikirap.album.domain.Album;
+import com.druiz.fullstack.wikirap.song.domain.Song;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SongOutputDto {
@@ -17,5 +19,14 @@ public class SongOutputDto {
     private LocalTime duration;
     private String description;
     private LocalDate departureDate;
-    private int idAlbum;
+    private Album idAlbum;
+
+    public SongOutputDto(Song song) {
+        idSong = song.getIdSong();
+        title = song.getTitle();
+        duration = song.getDuration();
+        description = song.getDescription();
+        departureDate = song.getDepartureDate();
+        idAlbum = song.getAlbum();
+    }
 }

@@ -1,33 +1,33 @@
 package com.druiz.fullstack.wikirap.song.application;
 
+import com.druiz.fullstack.wikirap.album.domain.Album;
+import com.druiz.fullstack.wikirap.album.infrastructure.repo.AlbumRepo;
 import com.druiz.fullstack.wikirap.song.application.port.SongService;
 import com.druiz.fullstack.wikirap.song.domain.Song;
 import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongInputDto;
 import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongOutputDto;
 import com.druiz.fullstack.wikirap.song.infrastructure.repo.SongRepo;
 import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
-import com.druiz.fullstack.wikirap.utils.mapper.SongMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 public class SongServiceImpl implements SongService {
 
     private final SongRepo songRepo;
-    private final SongMapper mapper;
-
-    public SongServiceImpl(SongRepo songRepo, SongMapper mapper) {
-        this.songRepo = songRepo;
-        this.mapper = mapper;
-    }
+    private final AlbumRepo albumRepo;
 
     @Override
     public SongOutputDto addSong(SongInputDto songInputDto) {
-        Song song = mapper.mapInputToEntity(songInputDto);
-        songRepo.save(song);
-        return mapper.mapEntityToOutput(song);
+       Song song = mapToEntity(songInputDto);
+       songRepo.save(song);
+
+       return new SongOutputDto(song);
     }
 
     @Override
@@ -36,25 +36,40 @@ public class SongServiceImpl implements SongService {
         /* PIPELINE */
         songInputDtoList.forEach( s -> {
             // Mapeamos y convertimos cada elemento de la lista (DTO-SONG) en Entity
-            Song song = mapper.mapInputToEntity(s);
+            Song song = mapToEntity(s);
             list.add(song);
         });
         // Save
         songRepo.saveAll(list);
         // Convertir a OutputDto
-        return mapper.mapListEntityToOutput(list);
+        List<SongOutputDto> outputDtoList = new ArrayList<>();
+        list.forEach(entity -> {
+            SongOutputDto outputDto = new SongOutputDto(entity);
+            outputDtoList.add(outputDto);
+        });
+        return outputDtoList;
     }
 
     @Override
     public List<SongOutputDto> findAllSongs() {
         List<Song> list = songRepo.findAll();
-        return mapper.mapListEntityToOutput(list);
+        List<SongOutputDto> outputDtoList = new ArrayList<>();
+        list.forEach(entity -> {
+            SongOutputDto outputDto = new SongOutputDto(entity);
+            outputDtoList.add(outputDto);
+        });
+        return outputDtoList;
     }
 
     @Override
     public List<SongOutputDto> findSongByTitle(String title) {
         List<Song> list = songRepo.findSongByTitle(title);
-        return mapper.mapListEntityToOutput(list);
+        List<SongOutputDto> outputDtoList = new ArrayList<>();
+        list.forEach(entity -> {
+            SongOutputDto outputDto = new SongOutputDto(entity);
+            outputDtoList.add(outputDto);
+        });
+        return outputDtoList;
     }
 
     @Override
@@ -64,7 +79,7 @@ public class SongServiceImpl implements SongService {
         /* Haciendo uso de una función creada para actualizar  */
         songInDB.update(songInputDto);
         songRepo.save(songInDB);
-        return mapper.mapEntityToOutput(songInDB);
+        return new SongOutputDto(songInDB);
     }
 
     @Override
@@ -82,6 +97,21 @@ public class SongServiceImpl implements SongService {
         Song song = songRepo.findById(id).orElseThrow(
                 ()-> new RuntimeException("Song with id " + id + " not found"));
         // 2. Mapeamos la entidad a Output
-        return mapper.mapEntityToOutput(song);
+        return new SongOutputDto(song);
     }
+
+    public Song mapToEntity (SongInputDto dto){
+        Song song1 = new Song();
+        song1.setAlbum(obtenerAlbumById(dto));
+        song1.setTitle(dto.getTitle());
+        song1.setDepartureDate(LocalDate.parse(dto.getDepartureDate()));
+        song1.setDuration(LocalTime.parse(dto.getDuration()));
+        return song1;
+    }
+
+    private Album obtenerAlbumById(SongInputDto dto) {
+        return albumRepo.findById(dto.getIdAlbum()).orElseThrow(
+                () -> new NotFoundException("Album not found"));
+    }
+
 }

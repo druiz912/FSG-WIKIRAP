@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HomeComponent } from './components/home/home.component';
 /* */
-import { PersonComponent } from './components/api/person/person.component';
+import { PersonListComponent } from './components/api/person/lista/person-list.component';
 import { PersonFormComponent } from './components/api/person/form/person-form.component';
 /* */
 import { ArtistComponent } from './components/api/artist/artist.component';
@@ -25,7 +25,7 @@ import { SongFormComponent } from './components/api/song/form/song-form.componen
     AppComponent,
     NavbarComponent,
     HomeComponent,
-    PersonComponent,
+    PersonListComponent,
     PersonFormComponent,
     ArtistComponent,
     ArtistFormComponent,

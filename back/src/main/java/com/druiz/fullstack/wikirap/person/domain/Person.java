@@ -1,9 +1,13 @@
 package com.druiz.fullstack.wikirap.person.domain;
 
 import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonInputDto;
+import com.druiz.fullstack.wikirap.utils.exceptions.UnprocessableException;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 
 @Getter
@@ -18,14 +22,12 @@ public class Person {
     private int idPerson;
     @Column(name = "nombre", length = 80)
     private String name;
-    @Column(name = "primer_apellido", length = 50)
-    private String surname;
-    @Column(name = "segundo_apellido",length = 50)
-    private String surname1;
+    @Column(name = "apellidos", length = 50)
+    private String surnames;
     @Column(name = "edad",length = 3, nullable = false)
     private int age;
     @Column(name = "fecha_nacimiento")
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     @Column(name = "origen", length = 120)
     private String origen;
     @Column(name = "altura")
@@ -33,18 +35,46 @@ public class Person {
     @Column(name = "ocupacion", length = 120)
     private String occupation;
 
-    /** Método VOID que actualiza los atributos de Person recibiendo por parámetros un InputDTO **/
-    public void update(PersonInputDto input) {
-        name = input.getName();
-        surname = input.getSurname();
-        surname1 = input.getSurname1();
-        age = input.getAge();
-        dateOfBirth = input.getDateOfBirth();
-        origen = input.getOrigen();
-        altura = input.getAltura();
-        occupation = input.getOccupation();
+
+    /** CONSTRUCTOR **/
+    public Person(PersonInputDto dto){
+        if (dto == null) throw new IllegalArgumentException("Dto cannot be null");
+        try {
+            name = dto.getName();
+            surnames = dto.getSurnames();
+            age = calculateAgeByDateOfBirth(dto.getDateOfBirth());
+            dateOfBirth = LocalDate.parse(dto.getDateOfBirth().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            origen = dto.getOrigen();
+            altura = dto.getAltura();
+            occupation = dto.getOccupation();
+        } catch (UnprocessableException e) {
+            throw new UnprocessableException("No se pudo procesar el mapeado de InputDto a Entidad");
+        }
     }
 
+    /** MÉTODOS **/
+    public int calculateAgeByDateOfBirth(LocalDate dateOfBirth) {
+        /* Instanciamos un objeto LocalDate para obtener el tiempo actual */
+        LocalDate dateNow = LocalDate.now();
+        /* Inicializamos Period para usar su método .between(fecha1, fecha2) */
+        Period period = Period.between(dateOfBirth, dateNow);
+        /* Devolvemos la variable period pero accedemos al getter de Years */
+        return period.getYears();
+    }
 
+    public void update(PersonInputDto input) {
+        if (input == null) return;
+        try {
+            name = input.getName();
+            surnames = input.getSurnames();
+            age = calculateAgeByDateOfBirth(input.getDateOfBirth());
+            dateOfBirth = input.getDateOfBirth();
+            origen = input.getOrigen();
+            altura = input.getAltura();
+            occupation = input.getOccupation();
+        } catch (UnprocessableException e){
+            e.getStackTrace();
+        }
+    }
 
 }

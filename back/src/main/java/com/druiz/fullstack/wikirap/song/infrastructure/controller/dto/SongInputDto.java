@@ -1,12 +1,13 @@
 package com.druiz.fullstack.wikirap.song.infrastructure.controller.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SongInputDto {

@@ -2,8 +2,7 @@ package com.druiz.fullstack.wikirap.artist.infrastructure.controller.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArtistInputDto {
@@ -14,11 +13,8 @@ public class ArtistInputDto {
 
     private String imageUrl;
 
-    private String occupation;
-
     private String periodoActivo;
 
     private String details;
-
 
 }

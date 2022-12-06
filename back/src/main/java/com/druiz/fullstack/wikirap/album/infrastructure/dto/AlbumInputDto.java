@@ -4,14 +4,15 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumInputDto {
 
     @NotNull
-    private int idArtist;
+    private Integer idArtist;
+    
+    private int categoryId;
     @NotNull
     private String urlPortada;
     @NotNull

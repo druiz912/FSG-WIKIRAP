@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 /* IMPORT COMPONENTS */
 import { HomeComponent } from './components/home/home.component';
 /* */
-import { PersonComponent } from './components/api/person/person.component';
+import { PersonListComponent } from './components/api/person/lista/person-list.component';
 import { PersonFormComponent } from './components/api/person/form/person-form.component';
 /* */
 import { ArtistComponent } from './components/api/artist/artist.component';
@@ -24,11 +24,11 @@ const routes: Routes = [
 
   /* PERSON */
   // Ruta al PersonComponent (Lista)
-  { path: 'persons', component: PersonComponent, pathMatch: 'full' },
+  { path: 'person/list', component: PersonListComponent, pathMatch: 'full' },
   // Ruta para el formulario
-  { path: 'person/form', component: PersonFormComponent },
+  { path: 'person/list/form', component: PersonFormComponent },
   // Ruta para editar persona pasándole un parámetro
-  { path: 'person/form/:id', component: PersonFormComponent },
+  { path: 'person/list/form/:id', component: PersonFormComponent },
 
   /* ARTIST */
   // Ruta a ArtistComponent (Lista)

@@ -11,15 +11,13 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AlbumMapper {
 
-    AlbumMapper INSTANCE = Mappers.getMapper(AlbumMapper.class);
-
     // Mapeo para convertir InputDto a Entity
-    Album mapInputToEntity(AlbumInputDto albumInputDto);
+    /*Album mapInputToEntity(AlbumInputDto albumInputDto);
     // Mapeo para convertir Entity a OutputDto
     AlbumOutputDto mapEntityToOutput(Album album);
 
     List<AlbumOutputDto> mapListEntityToOutput(List<Album> albums);
 
-
+*/
 
 }

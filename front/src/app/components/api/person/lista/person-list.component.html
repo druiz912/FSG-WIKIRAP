@@ -2,7 +2,7 @@
 
   <section>
     <h2><span>{{title}}</span></h2>
-    <button class="btn btn-info" type="button" [routerLink]="['/person/form']">Añadir persona</button>
+    <button class="btn btn-info" type="button" [routerLink]="['/person/list/form']">Añadir persona</button>
   </section>
 <hr>
 <table class="table">
@@ -33,7 +33,7 @@
         <td>{{person.height}}</td>
         <td>{{person.occupation}}</td>
         <!-- BOTÓN PARA EDITAR PERSONA -->
-        <td> <button type="button" name="BotonEditar" class="btn btn-primary" [routerLink]="['/person/form', person.idPerson]">Edit</button></td>
+        <td> <button type="button" name="BotonEditar" class="btn btn-primary" [routerLink]="['/person/list/form', person.idPerson]">Edit</button></td>
         <td><button type="button" name="botonEliminar" class="btn btn-danger" (click)="delete(person)">Delete</button></td>
       </tr>
     </tbody>

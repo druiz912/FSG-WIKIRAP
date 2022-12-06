@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Person } from './class/person';
-import { PersonService } from './service/person.service';
+import { Person } from '../class/person';
+import { PersonService } from '../service/person.service';
 
 @Component({
-  selector: 'app-person',
-  templateUrl: './person.component.html',
-  styleUrls: ['./person.component.css']
+  selector: 'app-person-table',
+  templateUrl: './person-list.component.html',
+  styleUrls: ['./person-list.component.css']
 })
-export class PersonComponent implements OnInit
+export class PersonListComponent implements OnInit
 {
   title: string = "Listado de personas"
 
@@ -21,11 +21,16 @@ export class PersonComponent implements OnInit
   {
     // Al iniciar que haga una llamada 
     this.service.getAll()
-      .subscribe(
-        // funcion flecha ; mapear la respuesta a nuestra variable persons, quedamos suscritos 
-        p => this.persons = p
-      );
+      .subscribe( (data:any) => this.persons = data)
+    // funcion flecha ; inicializar la variable persons con la data
+      
   }
+
+  /* 
+  
+  
+
+  */
 
   // Método eliminar
   delete(person:Person):void

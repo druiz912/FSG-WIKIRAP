@@ -7,49 +7,51 @@ import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonOu
 import com.druiz.fullstack.wikirap.person.infrastructure.repo.PersonRepo;
 import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
 import com.druiz.fullstack.wikirap.utils.mapper.PersonMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepo personRepo;
     private final PersonMapper mapper;
 
-    /** INYECCIÓN POR CONSTRUCTOR **/
-    public PersonServiceImpl(PersonRepo personRepo, PersonMapper mapper) {
-        this.personRepo = personRepo;
-        this.mapper = mapper;
-    }
 
-    /** MÉTODO PARA AÑADIR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO **/
+    /**
+     * MÉTODO PARA AÑADIR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO
+     **/
     @Override
     public PersonOutputDto addPerson(PersonInputDto personInputDto) {
-        /* Haciendo uso de MapStruct */
-        Person personMap = mapper.mapInputToEntity(personInputDto);
-        //
-        Person person = personRepo.save(personMap);
-        return mapper.mapEntityToOutput(person);
+        /* Inicializamos variable person tipo Person y le pasamos input */
+        Person person = new Person(personInputDto);
+        /* */
+        personRepo.save(person);
+        /* */
+        return new PersonOutputDto(person);
     }
 
-    /** MÉTODO PARA ACTUALIZAR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO Y UN ID **/
+    /**
+     * MÉTODO PARA ACTUALIZAR UNA PERSONA RECIBIENDO POR PARÁMETROS UN DTO Y UN ID
+     **/
     @Override
     public PersonOutputDto updatePerson(int id, PersonInputDto personInputDto) {
         /* Buscando el ID en las personas que tenemos en la BB DD */
         Person personInDB = personRepo.findById(id).orElseThrow(
-                ()-> new NotFoundException("Person with id: " + id + " not found"));
+                () -> new NotFoundException("Person with id: " + id + " not found"));
         /* Haciendo uso de una función creada para actualizar  */
         personInDB.update(personInputDto);
+        /* */
         personRepo.save(personInDB);
-        return mapper.mapEntityToOutput(personInDB);
+        return new PersonOutputDto(personInDB);
     }
 
     @Override
     public String deletePerson(int id) {
-        if(personRepo.findById(id).isPresent()){
+        if (personRepo.findById(id).isPresent()) {
             personRepo.deleteById(id);
             return "The person with id " + id + " is deleted";
         } else {
@@ -57,48 +59,69 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
-    /** MÉTODO PARA AÑADIR UNA LISTA DE PERSONAS **/
+    /**
+     * MÉTODO PARA AÑADIR UNA LISTA DE PERSONAS
+     **/
     @Override
     public List<PersonOutputDto> addListPersons(List<PersonInputDto> personInputDtoList) {
         List<Person> personList = new ArrayList<>();
+        List<PersonOutputDto> listPersonOutput = new ArrayList<>();
         /* PIPELINE */
-        personInputDtoList.forEach( p -> {
-           Person person = mapper.mapInputToEntity(p);
-           personList.add(person);
+        personInputDtoList.forEach(p -> {
+            Person person = new Person(p);
+            personList.add(person);
         });
         // Save
         personRepo.saveAll(personList);
         // Convertir a OutputDto
-        return mapper.mapListEntityToOutput(personList);
+        personList.forEach(entity -> {
+            PersonOutputDto outputDto = new PersonOutputDto(entity);
+            listPersonOutput.add(outputDto);
+        });
+        return listPersonOutput;
     }
 
 
-    /** MÉTODOS DE BÚSQUEDA:
-     *  1. Buscar persona por ID
-     *  2. Buscar persona por Name
-     *  3. Buscar todas las personas
-     * **/
+    /**
+     * MÉTODOS DE BÚSQUEDA:
+     * 1. Buscar persona por ID
+     * 2. Buscar persona por Name
+     * 3. Buscar todas las personas
+     **/
 
     // 1
     @Override
     public PersonOutputDto findPersonById(int id) {
         // 1. Buscamos tal id
         Person person = personRepo.findById(id).orElseThrow(
-                ()-> new RuntimeException("Person with id " + id + " not found"));
+                () -> new RuntimeException("Person with id " + id + " not found"));
         // 2. Mapeamos la entidad a Output
-        return PersonMapper.INSTANCE.mapEntityToOutput(person);
+        return new PersonOutputDto(person);
     }
 
     // 2
     @Override
     public List<PersonOutputDto> findPersonByName(String name) {
-       List<Person> person = personRepo.findByName(name);
-       return PersonMapper.INSTANCE.mapListEntityToOutput(person);
+        List<Person> person = personRepo.findPersonByName(name);
+        List<PersonOutputDto> list = new ArrayList<>();
+        person.forEach(entity -> {
+            PersonOutputDto outputDto = new PersonOutputDto(entity);
+            list.add(outputDto);
+        });
+
+        return list;
     }
+
     // 3
     @Override
     public List<PersonOutputDto> findAllPersons() {
         List<Person> personList = personRepo.findAll();
-        return PersonMapper.INSTANCE.mapListEntityToOutput(personList);
+        List<PersonOutputDto> list = new ArrayList<>();
+        personList.forEach(entity -> {
+            PersonOutputDto outputDto = new PersonOutputDto(entity);
+            list.add(outputDto);
+        });
+
+        return list;
     }
 }

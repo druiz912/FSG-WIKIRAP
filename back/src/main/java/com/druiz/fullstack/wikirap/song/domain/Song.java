@@ -24,7 +24,7 @@ public class Song {
 
     /* Un álbum tiene varias canciones */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "fk_id_album")
+    @JoinColumn(name = "id_album")
     private Album album;
 
     @Column(name = "title")

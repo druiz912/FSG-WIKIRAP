@@ -2,10 +2,16 @@ package com.druiz.fullstack.wikirap.album.domain;
 
 import com.druiz.fullstack.wikirap.album.infrastructure.dto.AlbumInputDto;
 import com.druiz.fullstack.wikirap.artist.domain.Artist;
+import com.druiz.fullstack.wikirap.artist.domain.Category;
 import com.druiz.fullstack.wikirap.song.domain.Song;
+import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongInputDto;
+import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
+import com.druiz.fullstack.wikirap.utils.exceptions.UnprocessableException;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,15 +26,22 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAlbum;
 
-    /* Un álbum puede tener varios artistas relacionados */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "fk_id_artist")
-    private Artist artist;
+    /* Un álbum puede tener N artistas relacionados */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_artist")
+    @JsonBackReference
+    private Artist artists;
 
-    /* Un álbum tiene varias canciones */
-    @OneToMany(targetEntity = Song.class, cascade = CascadeType.REFRESH)
+    // TODO: CONTINUAR CON LA RELACIÓN DE LAS TABLAS ->
+
+    /* Un álbum tiene n canciones */
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Song> songs;
 
+    /*@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_category")
+    private List<Category> category;
+*/
     @Column(name = "portada_url")
     private String titlePage;
 
@@ -39,12 +52,26 @@ public class Album {
     @Column(name = "fecha_estreno")
     private String departureDate;
 
-    public void update(AlbumInputDto albumInputDto) {
-        titlePage = albumInputDto.getUrlPortada();
-        title = albumInputDto.getTitle();
-        duration = albumInputDto.getDuration();
-        departureDate = albumInputDto.getFechaSalida();
+    public void update(Album album) {
+        try {
+            artists = album.getArtists();
+            titlePage = album.getTitlePage();
+            title = album.getTitle();
+            duration = album.getDuration();
+            departureDate = album.getDepartureDate();
+        } catch (Exception e) {
+            throw new NotFoundException("No se ha podido actualizar el album");
+        }
     }
+
+    public void addSong(Song song) {
+        songs.add(song);
+    }
+
+    public void removeSong(Song song) {
+        songs.remove(song);
+    }
+
 
 }
 

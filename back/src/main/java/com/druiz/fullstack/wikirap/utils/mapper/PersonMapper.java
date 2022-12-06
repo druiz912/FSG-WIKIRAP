@@ -13,10 +13,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PersonMapper {
 
-    PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
 
     // Mapeo para convertir InputDto a
-    @Mapping(source = "dateOfBirth", target = "dateOfBirth", dateFormat = "dd/MM/yyyy")
+    @Mapping(source = "dateOfBirth", target = "dateOfBirth", dateFormat = "yyyy-MM-dd")
     Person mapInputToEntity(PersonInputDto personInputDto);
     // Mapeo para convertir Entity a OutputDto
     PersonOutputDto mapEntityToOutput(Person person);
