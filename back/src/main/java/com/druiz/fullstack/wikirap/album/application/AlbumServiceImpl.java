@@ -127,6 +127,21 @@ public class AlbumServiceImpl implements AlbumService {
         return albumOutputDtoList;
     }
 
+    // TODO: COMPROBAR LA FUNCIONALIDAD DEL MÉTODO DEL REPO (QUERY SQL)
+    @Override
+    public List<AlbumOutputDto> findAlbumByArtist(String name) {
+        List<AlbumOutputDto> result = new ArrayList<>();
+        // Usando método del repo para buscar en la BB DD según el nombre del artista
+        var albums = albumRepo.findByArtist(name);
+        // Bucle forEach para mapear cada entidad Album a Dto
+        albums.forEach(a -> {
+            AlbumOutputDto dto = new AlbumOutputDto(a);
+            // Añadimos cada dto a la lista
+            result.add(dto);
+        });
+        return result;
+    }
+
 
     public Album mapToEntity (AlbumInputDto dto){
         Album album1 = new Album();

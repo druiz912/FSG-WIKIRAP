@@ -14,7 +14,7 @@ public interface AlbumMapper {
     // Mapeo para convertir InputDto a Entity
     /*Album mapInputToEntity(AlbumInputDto albumInputDto);
     // Mapeo para convertir Entity a OutputDto
-    AlbumOutputDto mapEntityToOutput(Album album);
+     AlbumOutputDto mapEntityToOutput(Album album);
 
     List<AlbumOutputDto> mapListEntityToOutput(List<Album> albums);
 

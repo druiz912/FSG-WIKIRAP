@@ -10,8 +10,12 @@ import java.util.List;
 public interface AlbumRepo extends JpaRepository<Album, Integer> {
 
 
-    @Query(value = "SELECT * FROM album al WHERE al.id_artist= ?", nativeQuery = true)
+    @Query(value = "SELECT * FROM album AS al WHERE al.id_artist = ?", nativeQuery = true)
     Album getArtistQuery(int idArtist);
 
     List<Album> findByTitle(String title);
+
+
+    @Query(value = "SELECT * FROM album AS al INNER JOIN artist AS art ON al.id_artist = art.id WHERE art.apodo", nativeQuery = true)
+    List<Album> findByArtist(String name);
 }

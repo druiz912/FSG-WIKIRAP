@@ -3,7 +3,6 @@ package com.druiz.fullstack.wikirap.artist.domain;
 import com.druiz.fullstack.wikirap.album.domain.Album;
 import com.druiz.fullstack.wikirap.artist.infrastructure.controller.dto.ArtistInputDto;
 import com.druiz.fullstack.wikirap.person.domain.Person;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -34,7 +33,7 @@ public class Artist {
     List<Album> albums = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_person")
+    @JoinColumn(name = "id_person_FK")
     private Person person;
 
 

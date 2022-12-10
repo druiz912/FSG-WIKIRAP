@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface ArtistRepo extends JpaRepository<Artist, Integer> {
 
-    @Query(value = "SELECT * FROM artist art WHERE art.id_person= ?", nativeQuery = true)
+    /**
+     *
+     * @param idPerson
+     * @return Artist
+     */
+    @Query(value = "SELECT * FROM artist AS art WHERE art.id_person= ?", nativeQuery = true)
     Artist getPersonQuery(Integer idPerson);
 
     List<Artist> findByApodo(String apodo);

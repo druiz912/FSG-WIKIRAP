@@ -21,4 +21,6 @@ public interface AlbumService {
 
     List<AlbumOutputDto> findAllAlbum();
 
+    List<AlbumOutputDto> findAlbumByArtist(String name);
+
 }

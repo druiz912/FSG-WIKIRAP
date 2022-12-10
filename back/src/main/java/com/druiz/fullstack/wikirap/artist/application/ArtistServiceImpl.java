@@ -25,12 +25,11 @@ public class ArtistServiceImpl implements ArtistService {
     public ArtistOutputDto addArtist(ArtistInputDto artistInputDto) {
         try {
             /* Instanciamos persona y buscamos el ID en la BB DD para que nos devuelva esa persona */
-            Person personFind = personRepo.findById(artistInputDto.getIdPerson()).orElseThrow(
-                    () -> new NotFoundException("No se encontró el id en Persona: " + artistInputDto.getIdPerson()));
+            Person personFind = findId(artistInputDto.getIdPerson());
             /* validación para saber si ya hay un artista registrado con ese ID */
             if (personFind == null || artistRepo.getPersonQuery(artistInputDto.getIdPerson()) != null)
                 throw new UnprocessableException("Artist object must have a correct person reference.");
-            /* Instanciamos objeto Artist para pasarle el inputDto y la person */
+            /* Instanciamos objeto Artist para pasarle el inputDto y la persona encontrada */
             Artist artist = new Artist(artistInputDto, personFind);
             /* Una vez convertido a Entidad, lo guardamos */
             artistRepo.save(artist);
@@ -38,24 +37,26 @@ public class ArtistServiceImpl implements ArtistService {
         } catch (UnprocessableException e) {
             e.getStackTrace();
         }
-        throw new UnprocessableException("Algo ha ido muy mal");
+        throw new UnprocessableException("No se ha podido crear el artista");
     }
 
     /** MÉTODO PARA AÑADIR UNA LISTA DE ARTISTAS **/
     @Override
     public List<ArtistOutputDto> addListArtists(List<ArtistInputDto> artistInputDtoList) {
-        /* */
+        /* Instanciamos una lista de tipo Artist */
         List<Artist> artistList = new ArrayList<>();
-        /* Bucle para iterar y mapear cada elemento de la lista */
+        /* Bucle para iterar y mapear cada elemento de la lista ≥ pasada por parámetros */
         artistInputDtoList.forEach( a -> {
             /* Comprobación de la existencia del ID de Persona */
-            Person person = personRepo.findById(a.getIdPerson())
-                    /* Mapeamos error por si no existe el ID */
+            Person person = findId(a.getIdPerson());
+            /*Person person = personRepo.findById(a.getIdPerson())
+                    /* Mapeamos error por si no existe el ID *
                     .orElseThrow(() -> new NotFoundException(
                             "No se encontró el id de la persona relacionada: " + a.getIdPerson()));
+                    */
             /* Inicializamos una variable del tipo Artist y le pasamos cada elemento de la lista */
             Artist artist = new Artist(a);
-            /* Seteamos la persona pasándole la supuesta persona encontrada por el ID */
+            /* Seteamos la persona pasándole la persona encontrada por el ID */
             artist.setPerson(person);
             /* Agregamos al ArrayList de Artistas */
             artistList.add(artist);
@@ -64,8 +65,11 @@ public class ArtistServiceImpl implements ArtistService {
         artistRepo.saveAll(artistList);
         // Convertir a OutputDto
         List<ArtistOutputDto> result = new ArrayList<>();
+        /* Bucle para iterar la lista ya guardada en la BB DD y mapearla a outputDto */
                 artistList.forEach( ar -> {
+                    /* Instanciamos dto para pasarle cada elemento de la lista */
                     ArtistOutputDto outputDto = new ArtistOutputDto(ar);
+                    /* Añadimos cada elemento ya mapeado a outputDto a la lista result */
                     result.add(outputDto);
                 } );
         return result;
@@ -74,8 +78,9 @@ public class ArtistServiceImpl implements ArtistService {
     /** MÉTODO PARA ACTUALIZAR UN ARTISTA **/
     @Override
     public ArtistOutputDto updateArtist(int id, ArtistInputDto artistInputDto) {
-        Person personInDB = personRepo.findById(artistInputDto.getIdPerson()).orElseThrow(
-                ()-> new NotFoundException("This id for Person: " + artistInputDto.getIdPerson() + " has not been found"));
+        /* Uso de función para encontrar ID de la persona */
+        Person personInDB = findId(artistInputDto.getIdPerson());
+        /* */
         Artist artistInDB = artistRepo.findById(id).orElseThrow(
                 ()-> new NotFoundException("This id for Artist: " + id + " has not been found"));
        if (personInDB.getIdPerson() != 0 && artistInDB.getIdArtist() != 0){
@@ -139,8 +144,16 @@ public class ArtistServiceImpl implements ArtistService {
         return result;
     }
 
-    /**  DTO   **/
+    /**  FUNCIONES AUXILIARES  **/
 
+    /** MÉTODO PARA ENCONTRAR UNA PERSONA
+     * @param idPerson
+     * @return Person
+     */
+    public Person findId(Integer idPerson){
+        return personRepo.findById(idPerson).orElseThrow(
+                ()-> new NotFoundException("This id for Person: " + idPerson + " has not been found"));
+    }
 
 
 }
