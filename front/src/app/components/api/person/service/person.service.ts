@@ -6,7 +6,9 @@ import { Person } from '../class/person';
 @Injectable({
   providedIn: 'root',
 })
-export class PersonService {
+export class PersonService
+{
+  // Añadir otras urls posteriores a person
   private url: string = 'http://localhost:8082/person';
 
   constructor(private http: HttpClient) {}
