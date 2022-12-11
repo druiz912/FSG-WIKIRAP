@@ -12,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Person {
@@ -24,7 +23,7 @@ public class Person {
     private String name;
     @Column(name = "apellidos", length = 50)
     private String surnames;
-    @Column(name = "edad",length = 3, nullable = false)
+    @Column(name = "edad", length = 3, nullable = false)
     private int age;
     @Column(name = "fecha_nacimiento")
     private LocalDate dateOfBirth;
@@ -36,7 +35,20 @@ public class Person {
     private String occupation;
 
 
+    public Person(int idPerson, String name, String surnames, int age, LocalDate dateOfBirth, String origen, Float altura, String occupation) {
+        this.idPerson = idPerson;
+        this.name = name;
+        this.surnames = surnames;
+        this.age = age;
+        this.dateOfBirth = dateOfBirth;
+        this.origen = origen;
+        this.altura = altura;
+        this.occupation = occupation;
+    }
+
     /** CONSTRUCTOR **/
+
+
     public Person(PersonInputDto dto){
         if (dto == null) throw new IllegalArgumentException("Dto cannot be null");
         try {

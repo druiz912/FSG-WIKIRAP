@@ -26,50 +26,34 @@ public class SongServiceImpl implements SongService {
     public SongOutputDto addSong(SongInputDto songInputDto) {
        Song song = mapToEntity(songInputDto);
        songRepo.save(song);
-
        return new SongOutputDto(song);
     }
 
     @Override
     public List<SongOutputDto> addListSongs(List<SongInputDto> songInputDtoList) {
-        List<Song> list = new ArrayList<>();
+        List<Song> listSong = new ArrayList<>();
         /* PIPELINE */
         songInputDtoList.forEach( s -> {
             // Mapeamos y convertimos cada elemento de la lista (DTO-SONG) en Entity
             Song song = mapToEntity(s);
-            list.add(song);
+            listSong.add(song);
         });
         // Save
-        songRepo.saveAll(list);
+        songRepo.saveAll(listSong);
         // Convertir a OutputDto
-        List<SongOutputDto> outputDtoList = new ArrayList<>();
-        list.forEach(entity -> {
-            SongOutputDto outputDto = new SongOutputDto(entity);
-            outputDtoList.add(outputDto);
-        });
-        return outputDtoList;
+        return mapListEntityToDto(listSong);
     }
 
     @Override
     public List<SongOutputDto> findAllSongs() {
-        List<Song> list = songRepo.findAll();
-        List<SongOutputDto> outputDtoList = new ArrayList<>();
-        list.forEach(entity -> {
-            SongOutputDto outputDto = new SongOutputDto(entity);
-            outputDtoList.add(outputDto);
-        });
-        return outputDtoList;
+        List<Song> listSong = songRepo.findAll();
+        return mapListEntityToDto(listSong);
     }
 
     @Override
     public List<SongOutputDto> findSongByTitle(String title) {
-        List<Song> list = songRepo.findSongByTitle(title);
-        List<SongOutputDto> outputDtoList = new ArrayList<>();
-        list.forEach(entity -> {
-            SongOutputDto outputDto = new SongOutputDto(entity);
-            outputDtoList.add(outputDto);
-        });
-        return outputDtoList;
+        List<Song> listSong = songRepo.findSongByTitle(title);
+        return mapListEntityToDto(listSong);
     }
 
     @Override
@@ -100,18 +84,29 @@ public class SongServiceImpl implements SongService {
         return new SongOutputDto(song);
     }
 
-    public Song mapToEntity (SongInputDto dto){
+    /** FUNCIONES AUXILIARES */
+
+    protected Song mapToEntity (SongInputDto dto){
         Song song1 = new Song();
-        song1.setAlbum(obtenerAlbumById(dto));
+        song1.setAlbum(findAlbumById(dto));
         song1.setTitle(dto.getTitle());
         song1.setDepartureDate(LocalDate.parse(dto.getDepartureDate()));
         song1.setDuration(LocalTime.parse(dto.getDuration()));
         return song1;
     }
 
-    private Album obtenerAlbumById(SongInputDto dto) {
+    // Buscar Album según ID
+    protected Album findAlbumById(SongInputDto dto) {
         return albumRepo.findById(dto.getIdAlbum()).orElseThrow(
                 () -> new NotFoundException("Album not found"));
     }
 
+    protected List<SongOutputDto> mapListEntityToDto(List<Song> listSong){
+        List<SongOutputDto> outputDtoList = new ArrayList<>();
+        listSong.forEach(entity -> {
+            SongOutputDto outputDto = new SongOutputDto(entity);
+            outputDtoList.add(outputDto);
+        });
+        return outputDtoList;
+    }
 }

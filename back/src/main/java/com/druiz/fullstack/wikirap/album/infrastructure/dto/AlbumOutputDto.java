@@ -25,8 +25,6 @@ public class AlbumOutputDto {
 
     private String category;
 
-
-
     public AlbumOutputDto(Album album) {
         if (album == null)
             return;

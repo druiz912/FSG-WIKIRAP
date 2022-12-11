@@ -25,7 +25,7 @@ public class ArtistOutputDto {
 
     private PersonOutputDto person;
 
-    private List<String> titleAlbum;
+    private List<AlbumOutputDto> albums;
 
 
     public ArtistOutputDto(Artist artist){
@@ -34,5 +34,12 @@ public class ArtistOutputDto {
         periodoActivo = artist.getPeriodoActivo();
         details = artist.getDetails();
         person = new PersonOutputDto(artist.getPerson());
+        var listAlbum = artist.getAlbums();
+        List<AlbumOutputDto> albumDto = new ArrayList<>();
+        listAlbum.forEach( entity -> {
+            AlbumOutputDto dto = new AlbumOutputDto(entity);
+            albumDto.add(dto);
+        });
+        albums = albumDto;
     }
 }

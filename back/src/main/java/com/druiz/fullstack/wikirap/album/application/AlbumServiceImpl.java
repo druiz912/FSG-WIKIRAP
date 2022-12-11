@@ -73,17 +73,8 @@ public class AlbumServiceImpl implements AlbumService {
         });
         // Save
         albumRepo.saveAll(albumList);
-        //
-        List<AlbumOutputDto> listOutput = new ArrayList<>();
-        // Iteramos la lista de Albums para mapear cada elemento de la lista a Output
-        albumList.forEach(entity -> {
-            /* Le pasamos cada elemento ≥ entity */
-            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
-            /* Añadimos a la lista de AlbumOutputDto */
-            listOutput.add(outputDto);
-        });
-
-        return listOutput;
+        // Función para mapear lista de Album a lista OutputDto
+       return mapListEntityToDto(albumList);
     }
 
     /**
@@ -106,40 +97,23 @@ public class AlbumServiceImpl implements AlbumService {
     // *-* 2 *-* //
     @Override
     public List<AlbumOutputDto> findAlbumByTitle(String title) {
-        List<Album> listAlbums = albumRepo.findByTitle(title);
-        List<AlbumOutputDto> listOutputDto = new ArrayList<>();
-        listAlbums.forEach( entity -> {
-            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
-            listOutputDto.add(outputDto);
-        });
-        return listOutputDto;
+        List<Album> albumList = albumRepo.findByTitle(title);
+        return mapListEntityToDto(albumList);
     }
 
     // *-* 3 *-* //
     @Override
     public List<AlbumOutputDto> findAllAlbum() {
         List<Album> albumList = albumRepo.findAll();
-        List<AlbumOutputDto> albumOutputDtoList = new ArrayList<>();
-        albumList.forEach(entity -> {
-            AlbumOutputDto outputDto = new AlbumOutputDto(entity);
-            albumOutputDtoList.add(outputDto);
-        });
-        return albumOutputDtoList;
+        return mapListEntityToDto(albumList);
     }
 
     // TODO: COMPROBAR LA FUNCIONALIDAD DEL MÉTODO DEL REPO (QUERY SQL)
     @Override
     public List<AlbumOutputDto> findAlbumByArtist(String name) {
-        List<AlbumOutputDto> result = new ArrayList<>();
         // Usando método del repo para buscar en la BB DD según el nombre del artista
         var albums = albumRepo.findByArtist(name);
-        // Bucle forEach para mapear cada entidad Album a Dto
-        albums.forEach(a -> {
-            AlbumOutputDto dto = new AlbumOutputDto(a);
-            // Añadimos cada dto a la lista
-            result.add(dto);
-        });
-        return result;
+        return mapListEntityToDto(albums);
     }
 
 
@@ -162,6 +136,17 @@ public class AlbumServiceImpl implements AlbumService {
 
         return artistRepo.findById(dto.getIdArtist()).orElseThrow(
                 () -> new NotFoundException("Artist not found"));
+    }
+
+    protected List<AlbumOutputDto> mapListEntityToDto(List<Album> albumList){
+        List<AlbumOutputDto> result = new ArrayList<>();
+        // Bucle forEach para mapear cada entidad Album a Dto
+        albumList.forEach(a -> {
+            AlbumOutputDto dto = new AlbumOutputDto(a);
+            // Añadimos cada dto a la lista
+            result.add(dto);
+        });
+        return result;
     }
 
 

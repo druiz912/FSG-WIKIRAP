@@ -43,36 +43,9 @@ public class ArtistServiceImpl implements ArtistService {
     /** MÉTODO PARA AÑADIR UNA LISTA DE ARTISTAS **/
     @Override
     public List<ArtistOutputDto> addListArtists(List<ArtistInputDto> artistInputDtoList) {
-        /* Instanciamos una lista de tipo Artist */
-        List<Artist> artistList = new ArrayList<>();
-        /* Bucle para iterar y mapear cada elemento de la lista ≥ pasada por parámetros */
-        artistInputDtoList.forEach( a -> {
-            /* Comprobación de la existencia del ID de Persona */
-            Person person = findId(a.getIdPerson());
-            /*Person person = personRepo.findById(a.getIdPerson())
-                    /* Mapeamos error por si no existe el ID *
-                    .orElseThrow(() -> new NotFoundException(
-                            "No se encontró el id de la persona relacionada: " + a.getIdPerson()));
-                    */
-            /* Inicializamos una variable del tipo Artist y le pasamos cada elemento de la lista */
-            Artist artist = new Artist(a);
-            /* Seteamos la persona pasándole la persona encontrada por el ID */
-            artist.setPerson(person);
-            /* Agregamos al ArrayList de Artistas */
-            artistList.add(artist);
-        });
-        // Save
-        artistRepo.saveAll(artistList);
+        List<Artist> artistList = mapListInputDtoToEntity(artistInputDtoList);
         // Convertir a OutputDto
-        List<ArtistOutputDto> result = new ArrayList<>();
-        /* Bucle para iterar la lista ya guardada en la BB DD y mapearla a outputDto */
-                artistList.forEach( ar -> {
-                    /* Instanciamos dto para pasarle cada elemento de la lista */
-                    ArtistOutputDto outputDto = new ArtistOutputDto(ar);
-                    /* Añadimos cada elemento ya mapeado a outputDto a la lista result */
-                    result.add(outputDto);
-                } );
-        return result;
+        return mapListEntityToDto(artistList);
     }
 
     /** MÉTODO PARA ACTUALIZAR UN ARTISTA **/
@@ -122,26 +95,13 @@ public class ArtistServiceImpl implements ArtistService {
     public List<ArtistOutputDto> findArtistByApodo(String apodo) {
         List<Artist> artistList = artistRepo.findByApodo(apodo);
         // Lista output
-        List<ArtistOutputDto> result = new ArrayList<>();
-        // Mapeo
-        artistList.forEach(ar -> {
-            ArtistOutputDto artistOutput = new ArtistOutputDto(ar);
-            result.add(artistOutput);
-        });
-        return result;
+        return mapListEntityToDto(artistList);
     }
     // ** 3 **
     @Override
     public List<ArtistOutputDto> findAllArtists() {
         List<Artist> artistList = artistRepo.findAll();
-        // Output
-        List<ArtistOutputDto> result = new ArrayList<>();
-        // Mapeo
-        artistList.forEach(ar -> {
-            ArtistOutputDto artistOutput = new ArtistOutputDto(ar);
-            result.add(artistOutput);
-        });
-        return result;
+        return mapListEntityToDto(artistList);
     }
 
     /**  FUNCIONES AUXILIARES  **/
@@ -150,10 +110,39 @@ public class ArtistServiceImpl implements ArtistService {
      * @param idPerson
      * @return Person
      */
-    public Person findId(Integer idPerson){
+    protected Person findId(Integer idPerson){
         return personRepo.findById(idPerson).orElseThrow(
                 ()-> new NotFoundException("This id for Person: " + idPerson + " has not been found"));
     }
 
+    protected List<ArtistOutputDto> mapListEntityToDto(List<Artist> artistList){
+        List<ArtistOutputDto> result = new ArrayList<>();
+        /* Bucle para iterar la lista ya guardada en la BB DD y mapearla a outputDto */
+        artistList.forEach( ar -> {
+            /* Instanciamos dto para pasarle cada elemento de la lista */
+            ArtistOutputDto outputDto = new ArtistOutputDto(ar);
+            /* Añadimos cada elemento ya mapeado a outputDto a la lista result */
+            result.add(outputDto);
+        } );
+        return result;
+    }
+
+    protected List<Artist> mapListInputDtoToEntity(List<ArtistInputDto> listDto){
+        /* Instanciamos una lista de tipo Artist */
+        List<Artist> artistList = new ArrayList<>();
+        /* Bucle para iterar y mapear cada elemento de la lista ≥ pasada por parámetros */
+        listDto.forEach( a -> {
+            /* Comprobación de la existencia del ID de Persona */
+            int idPerson = a.getIdPerson();
+            Person person = findId(idPerson);
+            /* Inicializamos una variable del tipo Artist y le pasamos cada elemento de la lista */
+            Artist artist = new Artist(a, person);
+            /* Agregamos al ArrayList de Artistas */
+            artistList.add(artist);
+        });
+        // Save
+        artistRepo.saveAll(artistList);
+        return artistList;
+    }
 
 }

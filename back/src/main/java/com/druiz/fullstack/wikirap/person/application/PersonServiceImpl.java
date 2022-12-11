@@ -6,7 +6,6 @@ import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonIn
 import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonOutputDto;
 import com.druiz.fullstack.wikirap.person.infrastructure.repo.PersonRepo;
 import com.druiz.fullstack.wikirap.utils.exceptions.NotFoundException;
-import com.druiz.fullstack.wikirap.utils.mapper.PersonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepo personRepo;
-    private final PersonMapper mapper;
+
 
 
     /**
@@ -102,26 +101,26 @@ public class PersonServiceImpl implements PersonService {
     // 2
     @Override
     public List<PersonOutputDto> findPersonByName(String name) {
-        List<Person> person = personRepo.findPersonByName(name);
-        List<PersonOutputDto> list = new ArrayList<>();
-        person.forEach(entity -> {
-            PersonOutputDto outputDto = new PersonOutputDto(entity);
-            list.add(outputDto);
-        });
-
-        return list;
+        List<Person> personList = personRepo.findPersonByName(name);
+        return mapListEntityToDto(personList);
     }
 
     // 3
     @Override
     public List<PersonOutputDto> findAllPersons() {
         List<Person> personList = personRepo.findAll();
+        return mapListEntityToDto(personList);
+    }
+
+    // FUNCIONES AUXILIARES
+
+    protected List<PersonOutputDto> mapListEntityToDto(List<Person> lista){
         List<PersonOutputDto> list = new ArrayList<>();
-        personList.forEach(entity -> {
+        // Iteración sobre la lista para mapear cada elemento y añadirlo a la lista
+        lista.forEach(entity -> {
             PersonOutputDto outputDto = new PersonOutputDto(entity);
             list.add(outputDto);
         });
-
         return list;
     }
 }

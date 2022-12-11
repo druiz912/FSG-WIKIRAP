@@ -29,11 +29,10 @@ public class Artist {
     private String details;
 
     @OneToMany(mappedBy = "artists", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
     List<Album> albums = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_person_FK")
+    @JoinColumn(name = "id_person")
     private Person person;
 
 
