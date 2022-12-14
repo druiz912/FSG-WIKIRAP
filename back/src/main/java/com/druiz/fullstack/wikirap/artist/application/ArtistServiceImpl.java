@@ -115,6 +115,7 @@ public class ArtistServiceImpl implements ArtistService {
                 ()-> new NotFoundException("This id for Person: " + idPerson + " has not been found"));
     }
 
+    /** Mapeo de una lista de Artist a una lista de OutputDto */
     protected List<ArtistOutputDto> mapListEntityToDto(List<Artist> artistList){
         List<ArtistOutputDto> result = new ArrayList<>();
         /* Bucle para iterar la lista ya guardada en la BB DD y mapearla a outputDto */
@@ -127,6 +128,7 @@ public class ArtistServiceImpl implements ArtistService {
         return result;
     }
 
+    /** Mapeo de una lista de InputDTO a una lista de Artist */
     protected List<Artist> mapListInputDtoToEntity(List<ArtistInputDto> listDto){
         /* Instanciamos una lista de tipo Artist */
         List<Artist> artistList = new ArrayList<>();
