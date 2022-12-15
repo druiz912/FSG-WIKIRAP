@@ -1,8 +1,5 @@
 package com.druiz.fullstack.wikirap.song.infrastructure.controller;
 
-import com.druiz.fullstack.wikirap.person.application.port.PersonService;
-import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonInputDto;
-import com.druiz.fullstack.wikirap.person.infrastructure.controller.dto.PersonOutputDto;
 import com.druiz.fullstack.wikirap.song.application.port.SongService;
 import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongInputDto;
 import com.druiz.fullstack.wikirap.song.infrastructure.controller.dto.SongOutputDto;
