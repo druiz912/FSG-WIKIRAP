@@ -1,20 +1,25 @@
 package com.druiz.fullstack.wikirap.user.infrastructure.controller;
 
-import com.druiz.fullstack.wikirap.user.domain.User;
+import com.druiz.fullstack.wikirap.user.application.UserService;
+import com.druiz.fullstack.wikirap.user.domain.UserEnt;
+import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.LoginDto;
 import com.druiz.fullstack.wikirap.user.infrastructure.repo.UserRepo;
-import com.druiz.fullstack.wikirap.utils.config.jwt.JwtTokenUtil;
-import com.druiz.fullstack.wikirap.utils.config.payload.JwtResponse;
-import com.druiz.fullstack.wikirap.utils.config.payload.LoginRequest;
-import com.druiz.fullstack.wikirap.utils.config.payload.MessageResponse;
-import com.druiz.fullstack.wikirap.utils.config.payload.RegisterRequest;
+import com.druiz.fullstack.wikirap.utils.config.jwt.JwtGenerator;
+import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.RegisterDto;
+import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.UserOutputDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controlador para llevar a cabo la autenticación utilizando JWT
@@ -24,64 +29,45 @@ import org.springframework.web.bind.annotation.*;
  *
  * Si las credenciales son válidas se genera un token JWT como respuesta
  */
-// @CrossOrigin(origins = "http://localhost:8081")
+// @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("api/auth")
+
 public class AuthController {
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserRepo userRepository;
+    @Autowired
+    private JwtGenerator jwtGenerator;
+    @Autowired
+    private UserService userService;
 
-    private final AuthenticationManager authManager;
-    private final UserRepo userRepository;
-    private final PasswordEncoder encoder;
-    private final JwtTokenUtil jwtTokenUtil;
 
-    public AuthController(AuthenticationManager authManager,
-                          UserRepo userRepository,
-                          PasswordEncoder encoder,
-                          JwtTokenUtil jwtTokenUtil) {
-        this.authManager = authManager;
-        this.userRepository = userRepository;
-        this.encoder = encoder;
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
+    @PostMapping("login")
+    public ResponseEntity<UserOutputDto> login(@RequestBody LoginDto loginDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.getUsername(),
+                        loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtTokenUtil.generateJwtToken(authentication);
-
-        // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        String token = jwtGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new UserOutputDto(token), HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<MessageResponse> register(@RequestBody RegisterRequest signUpRequest) {
-
-        // Check 1: username
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+    @PostMapping("register")
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+        if (userRepository.existsByUsername(registerDto.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
+        userService.saveUser(registerDto);
 
-        // Check 2: email
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
-        }
+        return new ResponseEntity<>("Welcome! " + registerDto.getUsername(), HttpStatus.OK);
+    }
 
-        // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    @GetMapping
+    public ResponseEntity<List<UserOutputDto>> getAllUsers() {
+        var x = userService.getAllUsers();
+        return new ResponseEntity<>(x, HttpStatus.OK);
     }
 }

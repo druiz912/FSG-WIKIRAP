@@ -1,16 +1,13 @@
 package com.druiz.fullstack.wikirap.user.infrastructure.repo;
 
-import com.druiz.fullstack.wikirap.user.domain.User;
+import com.druiz.fullstack.wikirap.user.domain.UserEnt;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface UserRepo extends JpaRepository<UserEnt, Integer> {
 
-public interface UserRepo extends JpaRepository<User, Integer> {
+    UserEnt findByEmailAndPassword(String email, String password);
 
-    Optional<User> findByUsername(String username);
+    UserEnt findByUsername(String username);
 
-    Boolean existsByUsername(String username);
-
-    Boolean existsByEmail(String email);
-
+    boolean existsByUsername(String username);
 }
