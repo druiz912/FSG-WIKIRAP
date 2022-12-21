@@ -2,14 +2,11 @@ package com.druiz.fullstack.wikirap.user.domain;
 
 
 import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.RegisterDto;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 

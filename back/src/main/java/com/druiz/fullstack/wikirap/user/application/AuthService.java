@@ -1,6 +1,6 @@
 package com.druiz.fullstack.wikirap.user.application;
 
-import com.druiz.fullstack.wikirap.user.domain.UserEnt;
+import com.druiz.fullstack.wikirap.user.domain.User;
 import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.RegisterDto;
 import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.UserOutputDto;
 
@@ -12,7 +12,9 @@ public interface UserService {
 
     UserOutputDto findByUsername(String username);
 
-    UserEnt upgradeRole(String username, String role);
+    User register(RegisterDto dto);
+
+    User upgradeRole(String username, String role);
 
     UserOutputDto saveUser(RegisterDto user);
 

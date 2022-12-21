@@ -1,7 +1,7 @@
 package com.druiz.fullstack.wikirap.user.application;
 
 import com.druiz.fullstack.wikirap.user.domain.Role;
-import com.druiz.fullstack.wikirap.user.domain.UserEnt;
+import com.druiz.fullstack.wikirap.user.domain.User;
 import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.RegisterDto;
 import com.druiz.fullstack.wikirap.user.infrastructure.controller.dto.UserOutputDto;
 import com.druiz.fullstack.wikirap.user.infrastructure.repo.RoleRepo;
@@ -28,38 +28,61 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutputDto findByEmailAndPassword(String email, String password) {
-        UserEnt userEnt = userRepo.findByEmailAndPassword(email, password);
-        UserOutputDto dto = new UserOutputDto(userEnt);
+        User user = userRepo.findByEmailAndPassword(email, password);
+        UserOutputDto dto = new UserOutputDto(user);
         return dto;
     }
 
     @Override
     public UserOutputDto findByUsername(String username) {
-        UserEnt userEnt = userRepo.findByUsername(username);
-        UserOutputDto dto = new UserOutputDto(userEnt);
+        User user = userRepo.findByUsername(username);
+        UserOutputDto dto = new UserOutputDto(user);
         return dto;
     }
 
     @Override
-    public UserEnt upgradeRole(String username, String role) {
-        UserEnt userEntFind = userRepo.findByUsername(username);
-        return userRepo.save(userEntFind);
+    public User register(RegisterDto dto) {
+        // Check 1: username
+        if (userRepo.existsByUsername(dto.getUsername())) {
+            throw new UnprocessableException("Error: Username is already taken!");
+        }
+
+        // Check 2: email
+        if (userRepo.existsByEmail(dto.getEmail())) {
+            throw new UnprocessableException("Error: Email is already in use!");
+        }
+
+        // Create new user's account
+        User user = new User(dto.getUsername(),
+                dto.getEmail(),
+                encoder.encode(dto.getPassword()));
+
+        userRepo.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @Override
+    public User upgradeRole(String username, String role) {
+        User userFind = userRepo.findByUsername(username);
+        return userRepo.save(userFind);
     }
 
     @Override
     public UserOutputDto saveUser(RegisterDto user) {
         if (user == null) throw new UnprocessableException("User is null");
         // Condicional para añadir un rol según el correo
-        UserEnt newUserEnt = new UserEnt(user);
+        User newUser = new User(user);
         Role roles;
-        if (newUserEnt.getEmail().contains("test")) {
+        // Cuidado con el error de no añadir nada a la tabla ROLES
+        if (newUser.getEmail().contains("daniel")) {
             roles = roleRepo.findByName("ADMIN").get();
         } else {
             roles = roleRepo.findByName("USER").get();
         }
-        newUserEnt.addRole(roles);
-        userRepo.save(newUserEnt);
-        return new UserOutputDto(newUserEnt);
+        newUser.addRole(roles);
+        userRepo.save(newUser);
+        return new UserOutputDto(newUser);
     }
 
     @Override
